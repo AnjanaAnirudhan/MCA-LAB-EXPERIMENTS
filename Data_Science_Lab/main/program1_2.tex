@@ -1,0 +1,241 @@
+\mychapter{1}{Assignment 2 \\ \vspace{-0.3cm} Vectorized Computations using Numpy}
+\addcontentsline{toc}{chapter}{Assignment 2 Vectorized Computations using Numpy}
+
+\section*{Problem Statement}
+\large
+Implement the following computations using NumPy: 
+
+\begin{enumerate}
+    \item Create a matrix U of shape (m, n) with input values where m and n are input
+positive integers.
+    \item Compute X as the transpose of U.
+      \item Create a matrix $Y$ of shape $(1, m)$ with random values $\in [0, 1]$.
+    \item Create a matrix $W1$ of shape $(p, n)$ with random values $\in [0, 1]$ where $p$ is an input positive integer.
+    \item Create a vector $B1$ of shape $(p, 1)$ with random values $\in [0, 1]$.
+    \item Create a vector $W2$ of shape $(1, p)$ with all zeros.
+    \item Create a scalar $B2$ with a random value $\in [0, 1]$.
+    \item Perform the following computations iteratively 15 times:
+   \begin{enumerate}
+        \item $Z1 = W1 \cdot X + B1$ \hspace{0.2cm} (Matrix Multiplication)
+        \item $A1 = f(Z1)$ \hspace{0.2cm} where $f$ is a function that returns 0 for negative values and the input value itself otherwise.
+        \item $Z2 = W2 \cdot A1 + B2$
+        \item $A2 = g(Z2)$ \hspace{0.2cm} where $g$ is a function defined as $g(x) = \frac{1}{1+e^{-x}}$.
+        \item $L = \frac{1}{2} (A2 - Y)^2$
+        \item $dA2 = A2 - Y$
+        \item $dZ2 = dA2 \circ gprime(Z2)$ \hspace{0.2cm} where $gprime(x)$ is a function that returns $g(x) \cdot (1 - g(x))$ and $\circ$ indicates element-wise multiplication.
+        \item $dA1 = W2^T \cdot dZ2$
+        \item $dZ1 = dA1 \circ fprime(Z1)$ \hspace{0.2cm} where $fprime$ is a function that returns 1 for positive values and 0 otherwise and $\circ$ indicates element-wise multiplication.
+        \item $dW1 = \frac{1}{m} \cdot dZ1 \cdot X^T$
+        \item $dB1 = \frac{1}{m} \sum dZ1$ \hspace{0.2cm} (sum along the columns)
+        \item $dW2 = \frac{1}{m} \cdot dZ2 \cdot A1^T$
+        \item $dB2 = \frac{1}{m} \sum dZ2$ \hspace{0.2cm} (sum along the columns)
+        \item Update and print $W1$, $B1$, $W2$, and $B2$ for $\alpha = 0.01$:
+        \begin{enumerate}
+            \item $W1 = W1 - \alpha \cdot dW1$
+            \item $B1 = B1 - \alpha \cdot dB1$
+            \item $W2 = W2 - \alpha \cdot dW2$
+            \item $B2 = B2 - \alpha \cdot dB2$
+        \end{enumerate}
+    \end{enumerate}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+\section{Matrix}
+\vspace{-.15cm}
+\subsection{Create Matrix}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+import numpy as np
+m=int(input("Enter row size:"))
+n=int(input("Enter column size:"))
+print("Enter values in single line(space seperated formst):")
+entries=list(map(int,input().split()))
+U=np.array(entries).reshape(m,n)
+print(U)
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+Enter row size: 3
+Enter column size: 3
+Enter values in single line(space seperated formst):
+ 12 3 -8 9 34 5 6 4 54
+[[12  3 -8]
+ [ 9 34  5]
+ [ 6  4 54]]
+\end{verbatim}
+\vspace{-.6cm}
+\subsection{Matrix Transpose}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+X=U.T
+print("Transpose of matrix U:")
+print(X) 
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+Transpose of matrix U:
+[[12  9  6]
+ [ 3 34  4]
+ [-8  5 54]]
+\end{verbatim}
+\vspace{-.75cm}
+\newpage
+\subsection{Matrix with random values}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+m=3
+Y=np.random.rand(1,m)
+print(Y) 
+
+p=int(input("Enter  positive value,p :"))
+n=3
+W1=np.random.rand(p,n)
+print("Matrix W1\n",W1)
+
+p=int(input("Enter a value for p :"))
+B1=np.random.rand(p,1)
+print("Vector B1:")
+print(B1)
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+[[0.1017947  0.10587389 0.76135783]]
+Enter  positive value,p : 3
+Matrix W1
+ [[0.12742882 0.59023487 0.70840949]
+ [0.12882403 0.02896318 0.7421581 ]
+ [0.87475144 0.40225054 0.97983924]]
+ Enter a value for p : 3
+Vector B1:
+[[0.89954103]
+ [0.9744558 ]
+ [0.59537661]]
+\end{verbatim}
+\vspace{-.75cm}
+\subsection{Matrix with zeros}
+\vspace{-.6cm}
+\begin{code}
+\begin{lstlisting}
+p=int(input("Enter value for p :"))
+W2=np.zeros((1,p))
+print(W2)
+
+\end{lstlisting}
+\end{code}
+\vspace{-.75cm}
+\begin{verbatim}
+Enter value for p : 3
+[[0. 0. 0.]]
+
+\end{verbatim}
+\vspace{-.6cm}
+\subsection{Scalar matrix}
+\vspace{-.6cm}
+\begin{code}
+\begin{lstlisting}
+B2=np.random.rand()
+print("Scalar B2:")
+print(B2)
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+Scalar B2:
+0.16961376428131913
+\end{verbatim}
+\vspace{-.6cm}
+\newpage
+\subsection{Matrix Computations}
+
+\begin{lstlisting}
+import numpy as np
+
+def f(Z):
+    return np.maximum(0,Z)
+    
+def g(Z):
+    return 1/(1+np.exp(-Z))
+    
+def gprime(Z):
+    gz=g(Z)
+    return gz*(1-gz)
+    
+def fprime(Z):
+    return (Z > 0).astype(float)
+
+alpha=0.01
+for i in range(15):
+    Z1=np.dot(W1,X) + B1
+
+    A1=f(Z1)
+
+    Z2=np.dot(W2,A1) + B2
+
+    A2=g(Z2)
+
+    L=0.5 * np.square(A2 - Y)
+
+    dA2=A2 -Y
+
+    dZ2=dA2 * gprime(Z2)
+
+    dA1=np.dot(W2.T,dZ2)
+
+    dZ1=dA1 * fprime(Z1)
+
+    dW1=np.dot(dZ1, X.T)
+\end{lstlisting}
+
+\newpage
+
+\begin{lstlisting}
+    dB1=np.sum(dZ1, axis=1,keepdims=True)/m
+
+    dW2=np.dot(dZ2,A1.T)/m
+
+    dB2=np.sum(dZ2)/m
+
+    W1 -=alpha * dW1
+    B1 -=alpha * dB1
+    W2 -=alpha * dW2
+    B2 -=alpha * dB2
+   
+print("\n Updated W1:\n",W1)
+print("\n Updated B1:\n",B1)
+print("\n Updated W2:\n",W2)
+print("\n Updated B2:\n",B2)
+print("\n Loss L:\n",L)
+\end{lstlisting}
+\begin{verbatim}
+Updated W1:
+ [[0.12945891 0.60107285 0.70093643]
+ [0.12389724 0.00263393 0.76036687]
+ [0.88218076 0.41163383 0.97037548]]
+
+ Updated B1:
+ [[0.89959736]
+ [0.97431926]
+ [0.59558278]]
+
+ Updated W2:
+ [[-0.0333751   0.09194226 -0.03199405]]
+
+ Updated B2:
+ 0.15579879317292614
+
+ Loss L:
+ [[0.08049264 0.01294096 0.0031798 ]]
+\end{verbatim}

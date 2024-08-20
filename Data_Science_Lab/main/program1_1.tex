@@ -1,0 +1,403 @@
+\mychapter{1}{Assignment 1 \\ \vspace{-0.3cm} Review of python programming}
+\addcontentsline{toc}{chapter}{Assignment 1 Review of python programming}
+
+\section*{Problem Statement}
+\large
+Write Python code to explore and practice with the basic data types, containers, functions, and classes of Python. 
+
+\begin{enumerate}
+    \item Start by creating variables of various numeric data types and assigning them values.
+    \item Print the data types and values of these variables.
+    \item Perform mathematical operations on these variables.
+    \item Update the values of these variables.
+    \item Create boolean variables with True or False values.
+    \item Print the data types of these boolean variables.
+    \item Perform Boolean operations on these boolean variables.
+    \item Create string variables with text values.
+    \item Print the contents and lengths of these string variables.
+    \item Concatenate strings.
+    \item Format strings with variables.
+    \item Use string methods to manipulate strings by capitalizing, converting to uppercase, justifying, centering, replacing substrings, and stripping whitespace.
+    \item Create and use Python lists. Perform tasks like appending elements, indexing, slicing, and iterating through the list.
+    
+    \item Create and use Python tuples. Perform tasks like indexing, slicing, and concatenation.
+
+    \item Create and use Python sets. Perform tasks like accessing, adding, deleting set elements.
+    
+    \item Create and use Python dictionaries. Perform tasks like adding, updating, and removing key-value pairs, and accessing values.
+    
+    \item Define simple functions with parameters and return values.
+    \item Call functions with different arguments and use the returned results.
+    \item Write functions that accept other functions as arguments.
+    \item Define and use Python classes. Include tasks like creating a class, defining methods, and creating instances.
+    \item Implement class inheritance and method overriding.
+    \item Create a class with class variables and instance variables, and demonstrate their usage.
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+\section{Basic data types}
+\vspace{-.15cm}
+\subsection{Numbers}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+x = 43
+print(x)
+print("Addition",x + 1)   
+print("Subtraction",x - 1)   
+print(" Multiplication",x * 2)   
+print("Exponentiation",x ** 2)  
+print("Division",x / 2)  
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+43 <class 'int'> 
+Addition 44
+Subtraction 42
+Multiplication 86
+Exponentiation 1849
+Division 21.5
+\end{verbatim}
+
+
+\vspace{-.6cm}
+\subsection{Booleans}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+t, f = True, False
+print(type(t))
+print(t and f) # Logical AND;
+print(t or f)  # Logical OR;
+print(not t)   # Logical NOT;
+print(t != f)  # Logical XOR;
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+<class 'bool'>
+False True False True
+\end{verbatim}
+\subsection{Strings}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+    hello='Hello'
+    world='World'
+    print(hello, len(hello))
+    hw = hello + ' ' + world 
+    print(hw)
+    hw12 = '{} {} {}'.format(hello, world, 12) 
+    print(hw12)
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+hello 5
+hello world
+hello world 12
+
+\end{verbatim}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+   s = "hello"
+   print(s.capitalize())
+   print(s.upper()) 
+   print(s.rjust(7))    
+   print(s.center(7)) 
+  print(s.replace('l', '(ell)'))
+  print('  world '.strip())
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+Hello
+HELLO
+ hello
+   hello
+he(ell)(ell)o
+world
+\end{verbatim}
+\vspace{-.75cm}
+\section{Containers}
+\vspace{-.4cm}
+\subsection{Lists}
+\vspace{-.45cm}
+\begin{code}
+\begin{lstlisting}
+li = [2, 3, 4, 5]
+print(li, li[2])
+print(li[-1]) 
+li[2] = 'hai'
+print(li)
+li.append('hello')
+print(li)
+r = li.pop()
+print(r, li)
+\end{lstlisting}
+\end{code}
+\vspace{-.75cm}
+\begin{verbatim}
+[2, 3, 4, 5] 4
+5
+[2, 3, 'hai', 5]
+[2, 3, 'hai', 5, 'hello']
+hello [2, 3, 'hai', 5]
+\end{verbatim}
+%\vspace{-.75cm}
+\newpage
+\subsection{Slicing}
+\vspace{-.6cm}
+\begin{code}
+\begin{lstlisting}
+n = list(range(6))
+print(n)
+print(n[1:3])
+print(n[3:])
+print(n[:3])
+print(n[:])
+print(n[:-1])
+n[2:4] = [8, 9]
+print(n)
+\end{lstlisting}
+\end{code}
+\vspace{-.75cm} 
+\begin{verbatim}
+[0, 1, 2, 3, 4,5]
+[1, 2]
+[0, 1, 2]
+[3, 4, 5]
+[0, 1, 2, 3, 4, 5]
+[0, 1, 2, 3, 4]
+[0, 1, 8, 9, 4, 5]
+\end{verbatim}
+\vspace{-.6cm}
+\subsection{Loops}
+\vspace{-.6cm}
+\begin{code}
+\begin{lstlisting}
+animals = ['cat', 'dog', 'elephent']
+for animal in animals:
+    print(animal)
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+cat
+dog
+elephent
+\end{verbatim}
+\vspace{-.6cm}
+\subsection{List comprehensions}
+\vspace{-.8cm}
+\begin{code}
+\begin{lstlisting}
+num = [ 1, 2, 3, 4, 5]
+sq = []
+for i in num:
+    sq.append(i ** 2)
+print(sq)
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+[ 1, 4, 9, 16, 25]
+\end{verbatim}
+\vspace{-.6cm}
+\subsection{Dictionaries}
+\vspace{-.6cm}
+\begin{code}[H]
+\begin{lstlisting}
+d = {'cat': 'cute', 'dog': 'furry'}
+print(d['cat'])
+print('cat' in d)
+d['fish'] = 'wet'
+print(d['fish']) 
+\end{lstlisting}
+\end{code}
+\vspace{-1.7cm}
+\begin{verbatim}
+cute
+True
+wet
+\end{verbatim}
+\newpage
+\vspace{-.75cm}
+\subsection{Sets}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+animals = {'cat', 'dog'}
+print('cat' in animals)
+print('fish' in animals)
+animals.add('cat')
+print(len(animals))       
+animals.remove('cat')
+print(len(animals))
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+True
+False
+3
+2
+\end{verbatim}
+\vspace{-.75cm}
+\subsection{Tuples}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+d = {(x, x + 1): x for x in range(10)}
+t = (5, 6)
+print(type(t))
+print(d[t])       
+print(d[(1, 2)])
+\end{lstlisting}
+\end{code}
+\vspace{-.95cm}
+\begin{verbatim}
+<class 'tuple'>
+5
+1
+\end{verbatim}
+\vspace{-.95cm}
+\section{Functions}
+\vspace{-.95cm}
+\begin{code}[h]
+\begin{lstlisting}
+def sign(x):
+    if x > 0:
+        return 'positive'
+    elif x < 0:
+        return 'negative'
+    else:
+        return 'zero'
+for x in [-1, 0, 1]:
+    print(sign(x))
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+negative
+zero
+positive
+\end{verbatim}
+\newpage
+\vspace{-.95cm}
+\begin{code}[h]
+\begin{lstlisting}
+def hello(name, loud=False):
+    if loud:
+        print("HELLO, {}".format(name.upper()))
+    else:
+         print("Hello, {}!".format(name))
+hello("Anjana")
+hello("Ram", loud=True)
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+Hello, Anjana!
+HELLO, RAM
+\end{verbatim}
+\vspace{-.6cm}
+\begin{code}[h]
+\begin{lstlisting}
+def apply_function(func, value):
+    return func(value)
+def square(x):
+    return x * x
+def cube(x):
+    return x * x * x
+print(apply_function(square, 3)) 
+print(apply_function(cube, 3))    
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+9
+27
+\end{verbatim}
+\section{Classes}
+\vspace{-.75cm}
+\begin{code}[h]
+\begin{lstlisting}
+class Greeter:
+    def __init__(self, name):
+        self.name = name
+    def greet(self, loud=False):
+        if loud:
+          print('HELLO, {}'.format(self.name.upper()))
+        else:
+          print('Hello, {}!'.format(self.name))
+g = Greeter('Fred')
+g.greet()
+g.greet(loud=True)
+\end{lstlisting}
+\end{code}
+\begin{verbatim}
+Hello, Fred!
+HELLO, FRED
+\end{verbatim}
+\newpage
+\subsection{Inheritance and Method overriding}
+\vspace{-.6cm}
+\begin{code}[h]
+\begin{lstlisting}
+class Animal:
+    def __init__(self, name):
+        self.name = name
+
+class Dog(Animal):
+    def speak(self):
+        return f"{self.name} barks."
+
+class Cat(Animal):
+    def speak(self):
+        return f"{self.name} meows."
+
+print(Dog("Buddy").speak())  
+print(Cat("Whiskers").speak())
+
+
+\end{lstlisting}
+\end{code}
+\vspace{-.4cm}
+\begin{verbatim}
+Buddy barks.
+Whiskers meows.
+\end{verbatim}
+\subsection{Class variables and Instance variables}
+\vspace{-.6cm}
+\begin{code}
+\begin{lstlisting}
+class MyClass:
+    class_var = "I am a class variable"
+    def __init__(self, instance_var):
+        self.instance_var = instance_var
+obj = MyClass("I am an instance variable")
+print(MyClass.class_var)  
+print(obj.class_var)     
+print(obj.instance_var)   
+\end{lstlisting}
+\end{code}
+\begin{verbatim}
+    I am a class variable
+    I am a class variable
+    I am an instance variable
+
+\end{verbatim}
+
+
+
+ 

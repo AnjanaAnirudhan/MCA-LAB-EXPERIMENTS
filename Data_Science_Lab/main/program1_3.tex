@@ -1,0 +1,248 @@
+\mychapter{1}{Assignment 3 \\ \vspace{-0.3cm}  Vectorized Computations using TensorFlow}
+\addcontentsline{toc}{chapter}{Assignment 3  Vectorized Computations using TensorFlow}
+
+\section*{Problem Statement}
+\large
+ Implement the following computations using TensorFlow:: 
+
+\begin{enumerate}
+   \item Compute X as the transpose of U.
+      \item Create a matrix $Y$ of shape $(1, m)$ with random values $\in [0, 1]$.
+    \item Create a matrix $W1$ of shape $(p, n)$ with random values $\in [0, 1]$ where $p$ is an input positive integer.
+    \item Create a vector $B1$ of shape $(p, 1)$ with random values $\in [0, 1]$.
+    \item Create a vector $W2$ of shape $(1, p)$ with all zeros.
+    \item Create a scalar $B2$ with a random value $\in [0, 1]$.
+    \item Perform the following computations iteratively 15 times:
+   \begin{enumerate}
+        \item $Z1 = W1 \cdot X + B1$ \hspace{0.2cm} (Matrix Multiplication)
+       \item[(b)] \( A_1 = \text{ReLU}(Z_1) \) \\
+  where \( \text{ReLU}(x) \) is a function that returns 0 for negative values and the input value itself otherwise.
+
+    \item[(c)] \( Z_2 = W_2 \cdot A_1 + B_2 \)
+
+    \item[(d)] \( A_2 = \text{softmax}(Z_2) \) \\
+  where \( \text{softmax}(x) = \frac{e^{x_i}}{\sum_j e^{x_j}} \)
+
+    \item[(e)] \( dZ_2 = A_2 - \text{one hot } Y \) \\
+  where one hot \( Y \) is the one-hot encoded form of \( Y \).
+
+    \item[(f)] \( dA_2 = W_2^T \cdot dZ_2 \)
+
+    \item[(g)] \( dW_2 = \frac{1}{m} \cdot dZ_2 \cdot A_1^T \)
+
+    \item[(h)] \( dB_2 = \frac{1}{m} \cdot \sum \text{dZ}_2 \) \\
+  (sum along the columns)
+
+    \item[(i)] \( dZ_1 = dA_2 \circ \text{ReLU deriv}(Z_1) \) \\
+  where \( \text{ReLU deriv}(x) \) returns 1 for positive values and 0 otherwise, and \( \circ \) indicates element-wise multiplication.
+
+    \item[(j)] \( dA_1 = W_1^T \cdot dZ_1 \)
+
+    \item[(k)] \( dB_1 = \frac{1}{m} \cdot \sum \text{dZ}_1 \) \\
+  (sum along the columns)
+
+    \item[(l)] \( dW_1 = \frac{1}{m} \cdot dZ_1 \cdot X^T \)
+
+    \item[(m)] Update and print \( W_1 \), \( B_1 \), \( W_2 \), and \( B_2 \) for \( \alpha = 0.01 \):
+    \begin{align*}
+    \text{i. } & W_1 = W_1 - \alpha \cdot dW_1 \\
+    \text{ii. } & B_1 = B_1 - \alpha \cdot dB_1 \\
+    \text{iii. } & W_2 = W_2 - \alpha \cdot dW_2 \\
+    \text{iv. } & B_2 = B_2 - \alpha \cdot dB_2
+    \end{align*}
+
+    \end{enumerate}
+\end{enumerate}
+
+
+
+
+
+
+
+
+
+\section{Matrix}
+\vspace{-.15cm}
+\subsection{CREATE MATRIX}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+import numpy as np
+import tensorflow as tf
+def create_matrix(m,n):
+u=tf.Variable(tf.random.normal(shape=(m,n)))
+return u
+m=int(input("enter the number of rows:"))
+n=int(input("enter the number of columns:"))
+matrix=create_matrix(m,n)
+print(matrix.numpy())
+
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+enter the number of rows: 3
+enter the number of columns: 4
+
+[[-1.1837945 -0.33722427 0.23563308 0.16107185]
+[-1.5149251 -0.5944967 1.4439311 1.4481225 ]
+[-0.14096595 -0.60184324 1.3875078 0.17040999]]
+
+\end{verbatim}
+\vspace{-.6cm}
+\subsection{MATRIX TRANSPOSE}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+x=tf.transpose(matrix)
+print(x.numpy())
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+[[-1.1837945 -1.5149251 -0.14096595]
+[-0.33722427 -0.5944967 -0.60184324]
+[ 0.23563308 1.4439311 1.3875078 ]
+[ 0.16107185 1.4481225 0.17040999]]
+\end{verbatim}
+\vspace{-.75cm}
+\newpage
+\subsection{MATRIX WITH RANDOM VALUES}
+\vspace{-.75cm}
+\begin{code}
+\begin{lstlisting}
+y=tf.Variable(tf.random.uniform(shape=(1,m),minval=0,maxval=10,dtype=tf.int32))
+print(y.numpy())
+
+p=int(input("enter the number of rows for w1:"))
+w1=tf.Variable(tf.random.uniform(shape=(p,n),minval=0,maxval=1,dtype=tf.
+↪float32))
+print(w1.numpy())
+
+B1=tf.Variable(tf.random.uniform(shape=(p,1),minval=0,maxval=1,dtype=tf.
+↪float32))
+print(B1.numpy())
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+[[7 3 4]]
+
+enter the number of rows for w1: 3
+[[0.41094923 0.64525306 0.21415687 0.05348241]
+[0.6334413 0.387007 0.71524847 0.2568928 ]
+[0.39981616 0.39820206 0.48125303 0.20443547]]
+
+[[0.2172625 ]
+[0.86350536]
+[0.48577976]]
+
+\end{verbatim}
+\vspace{-.75cm}
+\subsection{MATRIX WITH ZEROS}
+\vspace{-.6cm}
+\begin{code}
+\begin{lstlisting}
+w2=tf.Variable(tf.zeros(shape=(10,p)))
+print(w2.numpy())
+
+\end{lstlisting}
+\end{code}
+\vspace{-.75cm}
+\begin{verbatim}
+[[0. 0. 0.]
+[0. 0. 0.]
+[0. 0. 0.]
+[0. 0. 0.]
+[0. 0. 0.]
+[0. 0. 0.]
+[0. 0. 0.]
+[0. 0. 0.]
+[0. 0. 0.]
+[0. 0. 0.]]
+
+\end{verbatim}
+\vspace{2cm}
+\subsection{SCALAR MATRIX}
+\vspace{-.6cm}
+\begin{code}
+\begin{lstlisting}
+B2=tf.Variable(tf.random.uniform([],minval=-1,maxval=2,dtype=tf.float32))
+print(B2.numpy())
+\end{lstlisting}
+\end{code}
+\vspace{-1cm}
+\begin{verbatim}
+1.9291875
+\end{verbatim}
+%\vspace{-.6cm}
+%\newpage
+\subsection{MATRIX COMPUTATIONS}
+
+\begin{lstlisting}
+alpha=0.01
+def relu(x):
+    return tf.maximum(0,x)
+def relu_deriv(x):
+    return tf.where(x>0,tf.ones_like(x),tf.zeros_like(x))
+def softmax(x):
+    return tf.nn.softmax(x,axis=0)
+def one_hot_encode(y,depth):
+    return tf.one_hot(y,depth)
+for _ in range(15):
+    with tf.GradientTape() as tape:
+        Z1 = tf.matmul(w1, x) + B1
+        A1 = tf.nn.relu(Z1)
+        Z2 = tf.matmul(w2, A1) + B2
+        A2 = tf.nn.softmax(Z2)
+        y_one_hot = one_hot_encode(y, 10)
+        y_one_hot = tf.transpose(y_one_hot, perm=[2, 1, 0])
+        y_one_hot = tf.reshape(y_one_hot, [10, 3])
+        L = 0.5 * tf.reduce_sum(tf.square(A2 - tf.cast(y_one_hot, tf.float32)))
+        dZ2 = A2 - tf.cast(y_one_hot, dtype=tf.float32)
+        dA2 = tf.matmul(w2, dZ2, transpose_a=True)
+        dW2 = (1/m) * tf.matmul(dZ2, A1, transpose_b=True)
+        dB2 = (1/m) * tf.reduce_sum(dZ2, axis=1, keepdims=True)
+        dZ1 = dA2 * tf.cast(Z1 > 0, dtype=tf.float32)
+        dA1 = tf.matmul(w1, dZ1, transpose_a=True)
+        dB1 = (1/m) * tf.reduce_sum(dZ1, axis=1, keepdims=True)
+        dW1 = (1/m) * tf.matmul(dZ1, x, transpose_b=True)
+
+    gradients = tape.gradient(L, [w1, B1, w2, B2])
+    dW1, dB1, dW2, dB2 = gradients
+    w1.assign_sub(alpha * dW1)
+    B1.assign_sub(alpha * dB1)
+    w2.assign_sub(alpha * dW2)
+    B2.assign_sub(alpha * dB2)
+
+    print(f"Updated W1:\n{w1.numpy()}")
+    print(f"Updated B1:\n{B1.numpy()}")
+    print(f"Updated W2:\n{w2.numpy()}")
+    print(f"Updated B2:\n{B2.numpy()}")
+\end{lstlisting}
+\newpage
+\begin{verbatim}
+Updated W1:
+[[0.41094914 0.6452527 0.21415766 0.05348251]
+[0.6334481 0.3870048 0.71525824 0.2568947 ]
+[0.39982006 0.39820063 0.4812594 0.20443718]]
+Updated B1:
+[[0.21726307]
+[0.86350536]
+[0.48577976]]
+Updated W2:
+[[-1.5348143e-11 -5.6607086e-10 -3.0818986e-10]
+[-1.5348143e-11 -5.6607086e-10 -3.0818986e-10]
+[-1.5348143e-11 -5.6607086e-10 -3.0818986e-10]
+[-1.7174566e-04 8.5782167e-04 7.8074128e-04]
+[ 3.4333178e-04 4.1825897e-03 2.5001424e-03]
+[-1.5348143e-11 -5.6607086e-10 -3.0818986e-10]
+[-1.5348143e-11 -5.6607086e-10 -3.0818986e-10]
+[-1.7152089e-04 -5.0434656e-03 -3.2830592e-03]
+[ 1.5348143e-11 5.6607086e-10 3.0818992e-10]
+[ 1.5348143e-11 5.6607086e-10 3.0818992e-10]]
+Updated B2:
+1.929187536239624
+
+\end{verbatim}
