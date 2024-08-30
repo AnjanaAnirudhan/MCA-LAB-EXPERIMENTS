@@ -1,0 +1,239 @@
+package com.example.CALCULATOR;
+
+import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    private TextView display;
+    private String currentInput = "";
+    private Double operand1 = null;
+    private String operator = "";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        display = findViewById(R.id.display);
+
+        Button[] numberButtons = new Button[10];
+        for (int i = 0; i < numberButtons.length; i++) {
+            int resId = getResources().getIdentifier("button_" + i, "id", getPackageName());
+            numberButtons[i] = findViewById(resId);
+            numberButtons[i].setOnClickListener(new NumberButtonClickListener(i));
+        }
+
+        findViewById(R.id.button_clear).setOnClickListener(v -> clear());
+        findViewById(R.id.button_add).setOnClickListener(v -> setOperator("+"));
+        findViewById(R.id.button_subtract).setOnClickListener(v -> setOperator("-"));
+        findViewById(R.id.button_multiply).setOnClickListener(v -> setOperator("*"));
+        findViewById(R.id.button_divide).setOnClickListener(v -> setOperator("/"));
+        findViewById(R.id.button_equals).setOnClickListener(v -> calculate());
+    }
+
+    private class NumberButtonClickListener implements View.OnClickListener {
+        private int number;
+
+        NumberButtonClickListener(int number) {
+            this.number = number;
+        }
+
+        @Override
+        public void onClick(View v) {
+            currentInput += number;
+            display.setText(currentInput);
+        }
+    }
+
+    private void clear() {
+        currentInput = "";
+        operand1 = null;
+        operator = "";
+        display.setText("");
+    }
+
+    private void setOperator(String op) {
+        if (operand1 != null) {
+            calculate();
+        } else {
+            operand1 = parseDoubleSafe(currentInput);
+        }
+        operator = op;
+        currentInput = "";
+    }
+
+    private void calculate() {
+        if (operand1 == null || currentInput.isEmpty()) {
+            display.setText("Error");
+            return;
+        }
+
+        Double secondOperand = parseDoubleSafe(currentInput);
+        if (secondOperand == null) {
+            display.setText("Error");
+            return;
+        }
+
+        double result;
+        switch (operator) {
+            case "+":
+                result = operand1 + secondOperand;
+                break;
+            case "-":
+                result = operand1 - secondOperand;
+                break;
+            case "*":
+                result = operand1 * secondOperand;
+                break;
+            case "/":
+                if (secondOperand != 0) {
+                    result = operand1 / secondOperand;
+                } else {
+                    display.setText("Error");
+                    return;
+                }
+                break;
+            default:
+                display.setText("Error");
+                return;
+        }
+
+        display.setText(String.format("%.2f", result)); // Formatting to 2 decimal places
+        operand1 = result;
+        operator = "";
+        currentInput = "";
+    }
+
+    private Double parseDoubleSafe(String input) {
+        try {
+            return Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+}
+
+
+
+
+
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/display"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="16dp"
+        android:background="#EEE"
+        android:padding="16dp"
+        android:textSize="32sp"
+        android:textAlignment="textEnd"
+        android:text=""/>
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/display"
+        android:columnCount="4"
+        android:rowCount="5">
+
+        <!-- Row 1 -->
+        <Button
+            android:id="@+id/button_clear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="C"/>
+        <Button
+            android:id="@+id/button_divide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/"/>
+        <Button
+            android:id="@+id/button_multiply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="*"/>
+        <Button
+            android:id="@+id/button_subtract"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="-"/>
+
+        <!-- Row 2 -->
+        <Button
+            android:id="@+id/button_7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="7"/>
+        <Button
+            android:id="@+id/button_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="8"/>
+        <Button
+            android:id="@+id/button_9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9"/>
+        <Button
+            android:id="@+id/button_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+"/>
+
+        <!-- Row 3 -->
+        <Button
+            android:id="@+id/button_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"/>
+        <Button
+            android:id="@+id/button_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="5"/>
+        <Button
+            android:id="@+id/button_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="6"/>
+        <Button
+            android:id="@+id/button_equals"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="="/>
+
+        <!-- Row 4 -->
+        <Button
+            android:id="@+id/button_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1"/>
+        <Button
+            android:id="@+id/button_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="2"/>
+        <Button
+            android:id="@+id/button_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"/>
+        <Button
+            android:id="@+id/button_0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"/>
+
+    </GridLayout>
+
+</RelativeLayout>
